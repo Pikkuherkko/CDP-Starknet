@@ -19,9 +19,8 @@ func admin_storage() -> (admin: felt) {
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    name: felt, symbol: felt
+    name: felt, symbol: felt, owner: felt
 ) {
-    let (owner) = get_caller_address();
     ERC721.initializer(name, symbol);
     admin_storage.write(owner);
     return ();
@@ -54,7 +53,8 @@ func _transferFrom{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     tokenId: Uint256
 ) {
-    ERC721.assert_only_token_owner(tokenId);
+    let (caller) = get_caller_address();
+    assert caller = owner;
     ERC721._burn(tokenId);
     return();
 }
@@ -63,7 +63,8 @@ func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 func mint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     to: felt, tokenId: Uint256
 ) {
-    ERC721.assert_only_token_owner(tokenId);
+    let (caller) = get_caller_address();
+    assert caller = owner;
     ERC721._mint(to, tokenId);
     return();
 }
