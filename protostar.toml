@@ -3,7 +3,8 @@ protostar-version = "0.9.1"
 lib-path = ["lib/cairo_contracts/src"]
 
 [contracts]
-main = ["src/StableCoin.cairo"]
+stablecoin = ["src/StableCoin.cairo"]
+myvault = ["src/MyVault.cairo"]
 
 [profile.devnet.project]
 gateway-url = "http://127.0.0.1:5050/"
