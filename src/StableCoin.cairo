@@ -7,6 +7,7 @@ from starkware.cairo.common.uint256 import Uint256, uint256_add, uint256_le, uin
 from openzeppelin.token.erc20.library import ERC20
 from openzeppelin.security.reentrancyguard.library import ReentrancyGuard
 from interfaces.IMyVault import IMyVault
+from interfaces.IEmpiricOracle import IEmpiricOracle
 
 // events
 
@@ -181,8 +182,10 @@ func getTokenPriceSource{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_c
 func getEthPriceSource{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
     res: Uint256
 ) {
-    // ????
-    let res: Uint256 = split_felt(15990000000000000000000);
+    const PAIR_ID = 19514442401534788;  // str_to_felt("ETH/USD")
+    let (priceSource) = ethPriceSource.read();
+    let (price, decimals, last_updated_timestamp, num_sources_aggregated) = IEmpiricOracle.get_spot_median(priceSource, PAIR_ID);
+    let res: Uint256 = split_felt(price);
     return(res=res);
 }
 
@@ -224,9 +227,6 @@ func isValidCollateral{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 ) {
     alloc_locals;
     let (collateralValueTimes100, debtValue) = calculateCollateralProperties(collateral, debt);
-    // local collateralPercentage = collateralValueTimes100 / debtValue;
-    // let hundred_as_uint256: Uint256 = Uint256(100, 0);
-    // let prod: Uint256 = uint256_mul(collateralValueTimes100, debtValue);
     let (collateralPercentage: Uint256, rem: Uint256) = uint256_unsigned_div_rem(collateralValueTimes100, debtValue);
     let (minimumCollateralPercentage) = _minimumCollateralPercentage.read();
 
@@ -234,6 +234,8 @@ func isValidCollateral{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
     assert le = 1;
     return(bool=1);
 }
+
+// external functions
 
 @external
 func createVault{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}() -> (
