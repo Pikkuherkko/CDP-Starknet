@@ -113,15 +113,15 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     let zero_as_uint256: Uint256 = Uint256(0,0);
     let (le) = uint256_lt(zero_as_uint256, minimumCollateralPercentage);
     assert le = 1;
-    let ceiling: Uint256 = split_felt(10000000000000000000);
-    debtCeiling.write(ceiling); // ten
+    let ten_as_uint256: Uint256 = Uint256(10000000000000000000, 0);
+    debtCeiling.write(ten_as_uint256); // ten
     let fifty_as_uint256: Uint256 = Uint256(50,0);
     closingFee.write(fifty_as_uint256); // 0.5%
     openingFee.write(zero_as_uint256);
     ethPriceSource.write(ethPriceSourceAddress);
     stabilityPool.write(0);
-    let peg: Uint256 = split_felt(100000000);
-    tokenPeg.write(peg); // $1
+    let one_as_uint256: Uint256 = Uint256(100000000, 0);
+    tokenPeg.write(one_as_uint256); // $1
     erc721.write(vaultAddress);
     _minimumCollateralPercentage.write(minimumCollateralPercentage);
     return();
