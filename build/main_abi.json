@@ -1,0 +1,350 @@
+[
+    {
+        "members": [
+            {
+                "name": "low",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "high",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Uint256",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+        "data": [
+            {
+                "name": "from_",
+                "type": "felt"
+            },
+            {
+                "name": "to",
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "Transfer",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "owner",
+                "type": "felt"
+            },
+            {
+                "name": "spender",
+                "type": "felt"
+            },
+            {
+                "name": "value",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "Approval",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "creator",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "CreateVault",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "DestroyVault",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "from_",
+                "type": "felt"
+            },
+            {
+                "name": "to",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "TransferVault",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "DepositCollateral",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "WithdrawCollateral",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "BorrowToken",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "closingFee",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "PayBackToken",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "ethPriceSourceAddress",
+                "type": "felt"
+            },
+            {
+                "name": "minimumCollateralPercentage",
+                "type": "Uint256"
+            },
+            {
+                "name": "name",
+                "type": "felt"
+            },
+            {
+                "name": "symbol",
+                "type": "felt"
+            },
+            {
+                "name": "vaultAddress",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
+        "outputs": [],
+        "type": "constructor"
+    },
+    {
+        "inputs": [],
+        "name": "getDebtCeiling",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getClosingFee",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getOpeningFee",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTokenPriceSource",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getEthPriceSource",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "createVault",
+        "outputs": [
+            {
+                "name": "id",
+                "type": "Uint256"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            }
+        ],
+        "name": "destroyVault",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "to",
+                "type": "felt"
+            }
+        ],
+        "name": "transferVault",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "depositCollateral",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "withdrawCollateral",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "borrowToken",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "payBackToken",
+        "outputs": [],
+        "type": "function"
+    }
+]
