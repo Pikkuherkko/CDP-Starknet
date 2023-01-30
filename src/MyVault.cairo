@@ -10,11 +10,6 @@ from openzeppelin.introspection.erc165.library import ERC165
 
 // storage vars
 
-
-@storage_var
-func admin_storage() -> (admin: felt) {
-}
-
 // view functions 
 
 @view
@@ -83,21 +78,17 @@ func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
 ) {
     ERC721.initializer(name, symbol);
     Ownable.initializer(owner);
-    admin_storage.write(owner);
     return ();
 }
 
 // external functions
 
 @external
-func setAdmin{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
-    _admin: felt
+func transferOwnership{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    newOwner: felt
 ) {
-    let (admin) = admin_storage.read();
-    let (caller) = get_caller_address();
-    assert admin = caller;
-    admin_storage.write(_admin);
-    return();
+    Ownable.transfer_ownership(newOwner);
+    return ();
 }
 
 @external
@@ -114,9 +105,7 @@ func _transferFrom{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_p
 func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     tokenId: Uint256
 ) {
-    let (caller) = get_caller_address();
-    let (admin) = admin_storage.read();
-    assert caller = admin;
+    Ownable.assert_only_owner();
     ERC721._burn(tokenId);
     return();
 }
@@ -125,9 +114,7 @@ func burn{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
 func mint{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
     to: felt, tokenId: Uint256
 ) {
-    let (caller) = get_caller_address();
-    let (admin) = admin_storage.read();
-    assert caller = admin;
+    Ownable.assert_only_owner();
     ERC721._mint(to, tokenId);
     return();
 }

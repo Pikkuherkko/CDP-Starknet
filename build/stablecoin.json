@@ -32583,13 +32583,29 @@
                 "type": "const",
                 "value": 1329909728320632088402217562277154056711815095720684343816173432540100887380
             },
+            "interfaces.IMyVault.IMyVault.NAME_SELECTOR": {
+                "type": "const",
+                "value": 1528802474226268325865027367859591458315299653151958663884057507666229546336
+            },
+            "interfaces.IMyVault.IMyVault.OWNER_SELECTOR": {
+                "type": "const",
+                "value": 907111799109225873672206001743429201758838553092777504370151546632448000192
+            },
             "interfaces.IMyVault.IMyVault.Return": {
                 "cairo_type": "()",
                 "type": "type_definition"
             },
+            "interfaces.IMyVault.IMyVault.SETADMIN_SELECTOR": {
+                "type": "const",
+                "value": 1597464461050551292404482532883682307756058537159519755229643715720749706250
+            },
             "interfaces.IMyVault.IMyVault.SIZEOF_LOCALS": {
                 "type": "const",
                 "value": 0
+            },
+            "interfaces.IMyVault.IMyVault._TRANSFERFROM_SELECTOR": {
+                "type": "const",
+                "value": 223836791894222315417480784658208558532914235810949278276481913477714297424
             },
             "interfaces.IMyVault.IMyVault.alloc": {
                 "destination": "starkware.cairo.common.alloc.alloc",

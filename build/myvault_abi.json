@@ -252,11 +252,11 @@
     {
         "inputs": [
             {
-                "name": "_admin",
+                "name": "newOwner",
                 "type": "felt"
             }
         ],
-        "name": "setAdmin",
+        "name": "transferOwnership",
         "outputs": [],
         "type": "function"
     },
