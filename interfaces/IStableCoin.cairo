@@ -49,6 +49,9 @@ namespace IStableCoin {
     func payBackToken(vaultID: Uint256, amount: Uint256) {
     }
 
+    func BuyRiskyVault(vaultID: Uint256) {
+    }
+
     func name() -> (name: felt) {
     }
 

@@ -40,6 +40,10 @@ func BorrowToken(vaultID: Uint256, amount: Uint256) {
 func PayBackToken(vaultID: Uint256, amount: Uint256, closingFee: Uint256) {
 }
 
+@event
+func BuyRiskyVault(vaultID: Uint256, owner: felt, buyer: felt, amountPaid: Uint256) {
+}
+
 // storage functions
 
 @storage_var
@@ -457,12 +461,82 @@ func payBackToken{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_pt
     let (newVaultCollateral) = uint256_sub(_vaultCollateral, closingFeeEth);
     vaultCollateral.write(vaultID, newVaultCollateral);
 
-    let (_treasury) = treasury.read();
+    let (_treasury: Uint256) = treasury.read();
     let (_vaultCollateral) = vaultCollateral.read(_treasury);
     let (local newVaultCollateral, _) = uint256_add(_vaultCollateral, closingFeeEth);
+    vaultCollateral.write(_treasury, newVaultCollateral);
 
     ERC20._burn(caller, amount);
     PayBackToken.emit(vaultID, amount, closingFeeEth);
+    return();
+}
+
+@external
+func buyRiskyVault{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    vaultID: Uint256
+) {
+    alloc_locals;
+    let (_vaultExistence) = vaultExistence.read(vaultID);
+    with_attr error_message("Vault does not exist") {
+        assert _vaultExistence = 1;
+    }
+    //
+    // here this function could be disabled for public by requiring caller to be stabilityPool
+    //
+    let (_vaultCollateral) = vaultCollateral.read(vaultID);
+    let (_vaultDebt) = vaultDebt.read(vaultID);
+    let (_collateralValueTimes100: Uint256, _debtValue: Uint256) = calculateCollateralProperties(_vaultCollateral, _vaultDebt);
+
+    let (collateralPercentage: Uint256, rem: Uint256) = uint256_unsigned_div_rem(_collateralValueTimes100, _debtValue);
+    let (minimumCollateralPercentage) = _minimumCollateralPercentage.read();
+
+    let (lt) = uint256_lt(collateralPercentage, minimumCollateralPercentage);
+    with_attr error_message("Vault is not below minimum collateral percentage") {
+        assert lt = 1;
+    }
+
+    let (maximumDebtValue: Uint256, rem: Uint256) = uint256_unsigned_div_rem(_collateralValueTimes100, minimumCollateralPercentage);
+
+    let (ethPrice: Uint256) = getEthPriceSource();
+    let (maximumDebt: Uint256, rem: Uint256) = uint256_unsigned_div_rem(maximumDebtValue, ethPrice);
+
+    let (debtDifference: Uint256) = uint256_sub(_vaultDebt, maximumDebt);
+
+    let (caller) = get_caller_address();
+    let (caller_bal: Uint256) = balanceOf(caller);
+    let (le) = uint256_le(debtDifference, caller_bal);
+    with_attr error_message("Token balance too low to pay off outstanding debt") {
+        assert le = 1;
+    }
+
+    let (previusOwner) = vaultOwner.read(vaultID);
+
+    vaultOwner.write(vaultID, caller);
+    vaultDebt.write(vaultID, maximumDebt);
+
+    let (tokenPeg) = getTokenPriceSource();
+    let (_closingFee) = closingFee.read();
+    let ten_k_as_uint256: Uint256 = Uint256(10000, 0);
+    let (local denominator, _) = uint256_mul(ethPrice, ten_k_as_uint256);
+    let (local num, _) = uint256_mul(debtDifference, _closingFee);
+    let (local numerator, _) = uint256_mul(num, tokenPeg);
+    let (closingFeeEth: Uint256, rem: Uint256) = uint256_unsigned_div_rem(numerator, denominator);
+
+    let (newVaultCollateral: Uint256) = uint256_sub(_vaultCollateral, closingFeeEth);
+    vaultCollateral.write(vaultID, newVaultCollateral);
+
+    let (_treasury: Uint256) = treasury.read();
+    let (treasuryVaultCollateral: Uint256) = vaultCollateral.read(_treasury);
+    let (local newTreasuryVaultCollateral, _) = uint256_add(treasuryVaultCollateral, closingFeeEth);
+    vaultCollateral.write(_treasury, newTreasuryVaultCollateral);
+
+    ERC20._burn(caller, debtDifference);
+
+    let (_erc721) = erc721.read();
+    IMyVault.burn(_erc721, vaultID);
+    IMyVault.mint(_erc721, caller, vaultID);
+
+    BuyRiskyVault.emit(vaultID, previusOwner, caller, debtDifference);
     return();
 }
 

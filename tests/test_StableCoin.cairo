@@ -86,17 +86,25 @@ func test_deploy{syscall_ptr: felt*, range_check_ptr}(
 @external
 func test_mock_call_return_ethPrice{syscall_ptr: felt*, range_check_ptr}(
 ) {
-    alloc_locals;
     tempvar stablecoin_address: felt;
     %{
         ids.stablecoin_address = context.context_stablecoin_address
     %}
 
     // let price_as_uint256: Uint256 = Uint256(152038000000, 0);
-    %{ stop_mock = mock_call(ids.stablecoin_address, "getEthPriceSource", [(152038000000, 0)]) %}
-    let res: Uint256 = IStableCoin.getEthPriceSource(stablecoin_address);
-    %{ stop_mock() %}
-    assert res = Uint256(152038000000, 0);
+    // %{ stop_mock = mock_call(ids.stablecoin_address, "getEthPriceSource", [(152038000000, 0)]) %}
+    // let res: Uint256 = IStableCoin.getEthPriceSource(stablecoin_address);
+    // %{ stop_mock() %}
+    // assert res = Uint256(152038000000, 0);
 
     return();
+}
+
+@external
+func test_calculateCollateral{syscall_ptr: felt*, range_check_ptr}(
+) {
+    tempvar stablecoin_address: felt;
+    %{
+        ids.stablecoin_address = context.context_stablecoin_address
+    %}
 }

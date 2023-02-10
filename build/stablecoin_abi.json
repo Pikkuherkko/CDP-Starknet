@@ -179,6 +179,29 @@
         "type": "event"
     },
     {
+        "data": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            },
+            {
+                "name": "owner",
+                "type": "felt"
+            },
+            {
+                "name": "buyer",
+                "type": "felt"
+            },
+            {
+                "name": "amountPaid",
+                "type": "Uint256"
+            }
+        ],
+        "keys": [],
+        "name": "BuyRiskyVault",
+        "type": "event"
+    },
+    {
         "inputs": [
             {
                 "name": "ethPriceSourceAddress",
@@ -359,6 +382,17 @@
             }
         ],
         "name": "payBackToken",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "vaultID",
+                "type": "Uint256"
+            }
+        ],
+        "name": "buyRiskyVault",
         "outputs": [],
         "type": "function"
     },
