@@ -1,3 +1,6 @@
+// this thing is highly experimental, I do not recommend copying
+// author: Pikkuherkko
+
 %lang starknet
 from starkware.cairo.common.math import assert_nn, assert_not_zero, assert_le, split_felt
 from starkware.cairo.common.cairo_builtins import HashBuiltin
