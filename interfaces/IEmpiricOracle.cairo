@@ -16,3 +16,7 @@ namespace IEmpiricOracle {
     ) {
     }
 }
+
+// Address: 0x7e00d496e324876bbc8531f2d9a82bf154d1a04a50218ee74cdd372f75a551a
+// Public key: 0x7e52885445756b313ea16849145363ccb73fb4ab0440dbac333cf9d13de82b9
+// Private key: 0xe3e70682c2094cac629f6fbed82c07cd

@@ -1,4 +1,5 @@
 // this thing is highly experimental, I do not recommend copying
+// there is still a lot to do to get this working properly
 // author: Pikkuherkko
 
 %lang starknet
@@ -8,6 +9,7 @@ from starkware.starknet.common.syscalls import get_contract_address, get_caller_
 from starkware.cairo.common.uint256 import Uint256, uint256_add, uint256_le, uint256_lt, uint256_sub, uint256_mul, uint256_unsigned_div_rem
 
 from openzeppelin.token.erc20.library import ERC20
+from openzeppelin.token.erc20.IERC20 import IERC20
 from openzeppelin.access.ownable.library import Ownable
 from openzeppelin.security.reentrancyguard.library import ReentrancyGuard
 from interfaces.IMyVault import IMyVault
@@ -48,6 +50,11 @@ func BuyRiskyVault(vaultID: Uint256, owner: felt, buyer: felt, amountPaid: Uint2
 }
 
 // storage functions
+
+@storage_var
+func wethAddress() -> (res: felt) {
+}
+
 
 @storage_var
 func ethPriceSource() -> (res: felt) {
@@ -110,15 +117,17 @@ func stabilityPool() -> (res: felt) {
 
 @constructor
 func constructor{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr}(
+    weth: felt,
     ethPriceSourceAddress: felt,
     minimumCollateralPercentage: Uint256,
     name: felt,
     symbol: felt,
-    vaultAddress: felt
+    vaultAddress: felt,
+    owner: felt
 ) {
     ERC20.initializer(name, symbol, 18);
-    let (caller) = get_caller_address();
-    Ownable.initializer(caller);
+    Ownable.initializer(owner);
+    wethAddress.write(weth);
     assert_not_zero(ethPriceSourceAddress);
     let zero_as_uint256: Uint256 = Uint256(0,0);
     let (le) = uint256_lt(zero_as_uint256, minimumCollateralPercentage);
@@ -343,8 +352,8 @@ func depositCollateral{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_che
 
     let (caller) = get_caller_address();
     let (this) = get_contract_address();
-    ERC20.approve(this, amount);
-    ERC20.transfer_from(caller, this, amount);
+    let (weth) = wethAddress.read();
+    IERC20.transferFrom(weth, caller, this, amount);
 
     vaultCollateral.write(vaultID, newCollateral);
     DepositCollateral.emit(vaultID, amount);
@@ -385,7 +394,9 @@ func withdrawCollateral{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_ch
 
     let (caller) = get_caller_address();
     vaultCollateral.write(vaultID, newCollateral);
-    ERC20.transfer(caller, amount);
+    let (weth) = wethAddress.read();
+    IERC20.approve(weth, caller, amount);
+    IERC20.transfer(weth, caller, amount);
     WithdrawCollateral.emit(vaultID, amount);
     ReentrancyGuard.end();
     return();
@@ -424,7 +435,7 @@ func borrowToken{syscall_ptr: felt*, pedersen_ptr: HashBuiltin*, range_check_ptr
     vaultDebt.write(vaultID, newDebt);
 
     let (caller) = get_caller_address();
-    ERC20._mint(caller, amount);
+    mint(caller, amount);
     BorrowToken.emit(vaultID, amount);
     return();
 }

@@ -98,6 +98,7 @@ func test_createVault{syscall_ptr: felt*, range_check_ptr}(
         ids.stablecoin_address = context.context_stablecoin_address
     %}
 
+    //  needs myvault transferownership
     let id: Uint256 = IStableCoin.createVault(stablecoin_address);
 
     let (eq) = uint256_eq(Uint256(1,0), id);

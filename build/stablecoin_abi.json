@@ -204,6 +204,10 @@
     {
         "inputs": [
             {
+                "name": "weth",
+                "type": "felt"
+            },
+            {
                 "name": "ethPriceSourceAddress",
                 "type": "felt"
             },
@@ -221,6 +225,10 @@
             },
             {
                 "name": "vaultAddress",
+                "type": "felt"
+            },
+            {
+                "name": "owner",
                 "type": "felt"
             }
         ],
